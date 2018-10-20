@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/fetcher');
 
-let repoSchema = mongoose.Schema({
+const repoSchema = mongoose.Schema({
   _id: Number,
   name: String,
   full_name: String,
@@ -10,11 +10,27 @@ let repoSchema = mongoose.Schema({
   watchers_count: Number,
   stargazers_count: Number,
   html_url: String,
+  owner_id: Number,
+  contributors: [Number],
 });
 
-let Repo = mongoose.model('Repo', repoSchema);
+const ownerSchema = mongoose.Schema({
+  _id: Number,
+  login: String,
+  html_url: String,
+});
 
-let save = (data, callback) => {
+const contributorSchema = mongoose.Schema({
+  _id: Number,
+  login: String,
+  html_url: String,
+});
+
+const Repo = mongoose.model('Repo', repoSchema);
+const Owner = mongoose.model('Owner', ownerSchema);
+const Contributor = mongoose.model('Contributor', contributorSchema);
+
+const save = (data, callback) => {
   data.forEach(row => row._id = row.id);
   const ids = data.map(x => x.id);
 
@@ -33,7 +49,7 @@ let save = (data, callback) => {
   });
 }
 
-let get = (callback) => {
+const get = (callback) => {
   Repo.find().sort({ forks_count: -1,  _id: 1 }).limit(25).exec((err, data) => {
     callback(data);
   });

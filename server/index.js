@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const Promise = require('bluebird');
 const github = require('../helpers/github.js');
 const db = require('../database/index.js');
 const port = 1128;
@@ -13,18 +14,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/repos', function (req, res) {
   const term = Object.keys(req.body)[0];
-  github.getReposByUsername(term, (data) => {
-    db.save(data.items, (err, numReposUpdated, numNewRepos) => {
-      if (err) {
-        console.error('Error!');
-      } else {
-        console.log('Saved!');
-        res.status(201).send({
-          numReposUpdated: numReposUpdated,
-          numNewRepos: numNewRepos,
-        });
-      }
-    });
+  github.getReposByUsername(term, (repoData) => {
+    console.log('@@@@@@@@@@@@:',repoData.items);
+
+    Promise.all(repoData.items.map(x => getContributorsByURL(x.contributors_url)))
+      .then();
+
+
+    github.getContributorsByURL(repoData.items.contributors_url, (contribData) => {
+      console.log('############:', contribData);
+      db.save(repoData.items, (err, numReposUpdated, numNewRepos) => {
+        if (err) {
+          console.error('Error!');
+        } else {
+          console.log('Saved!');
+          res.status(201).send({
+            numReposUpdated: numReposUpdated,
+            numNewRepos: numNewRepos,
+          });
+        }
+      });
+    })
   });
 });
 
