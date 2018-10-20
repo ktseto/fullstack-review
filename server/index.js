@@ -14,10 +14,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/repos', function (req, res) {
   const term = Object.keys(req.body)[0];
   github.getReposByUsername(term, (data) => {
-    db.save(data.items, (err) => {
-      if (err) console.error('Error!');
-      console.log('Saved!');
-      res.status(201).end();
+    db.save(data.items, (err, numReposUpdated, numNewRepos) => {
+      if (err) {
+        console.error('Error!');
+      } else {
+        console.log('Saved!');
+        res.status(201).send({
+          numReposUpdated: numReposUpdated,
+          numNewRepos: numNewRepos,
+        });
+      }
     });
   });
 });

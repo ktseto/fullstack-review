@@ -8,7 +8,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      repos: []
+      repos: [],
+      importStats: { numReposUpdated: null, numNewRepos: null },
     } 
   }
 
@@ -36,7 +37,8 @@ class App extends React.Component {
       method: 'POST',
       data: term,
     })
-    .done(() => {
+    .done((importStats) => {
+      this.setState({ importStats });
       this.queryThenRender();
     });
   }
@@ -44,8 +46,8 @@ class App extends React.Component {
   render() {
     return (<div>
       <h1>Github Fetcher</h1>
-      <RepoList repos={this.state.repos}/>
-      <Search onSearch={this.search.bind(this)}/>
+      <RepoList repos={ this.state.repos }/>
+      <Search onSearch={ this.search.bind(this) } importStats={ this.state.importStats }/>
     </div>)
   }
 }

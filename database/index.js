@@ -16,9 +16,19 @@ let Repo = mongoose.model('Repo', repoSchema);
 
 let save = (data, callback) => {
   data.forEach(row => row._id = row.id);
-  Repo.deleteMany({ _id: { $in: data.map(x => x.id) }}, (err) => {
-    Repo.insertMany(data, (err) => {
-      callback(err);
+  const ids = data.map(x => x.id);
+
+  Repo.find({ _id: { $in: ids }}, (err, existingData) => {
+    // not "true" number updated since there's no comparison between old data and new data
+    // does not seem reasonable to compare all old/new data elements for change
+    // but we can diff forks_count and just report those that have changed (future improvement)
+    const numReposUpdated = existingData.length;
+    const numNewRepos = data.length - numReposUpdated;
+
+    Repo.deleteMany({ _id: { $in: ids }}, (err) => {
+      Repo.insertMany(data, (err) => {
+        callback(err, numReposUpdated, numNewRepos);
+      });
     });
   });
 }
