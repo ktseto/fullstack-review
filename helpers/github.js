@@ -24,8 +24,8 @@ const getContributorsByURL_CB = (url) => {
     url: url,
     headers: {
       'User-Agent': 'request',
-      'Authorization': `token ${config.TOKEN}`
-      //'Authorization': `token ${process.env.TOKEN}`
+      //'Authorization': `token ${config.TOKEN}`
+      'Authorization': `token ${process.env.TOKEN}`
     }
   };
 
