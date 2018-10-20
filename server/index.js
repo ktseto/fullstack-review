@@ -3,8 +3,8 @@ const bodyParser = require('body-parser');
 const Promise = require('bluebird');
 const github = require('../helpers/github.js');
 const db = require('../database/index.js');
-const port = 1128;
-// const port = process.env.PORT || 8000;
+// const port = 1128;
+const port = process.env.PORT || 8000;
 
 const app = express();
 

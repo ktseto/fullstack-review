@@ -7,8 +7,8 @@ const getReposByUsername = (username, callback) => {
     url: 'https://api.github.com/search/repositories?q=user:' + username,
     headers: {
       'User-Agent': 'request',
-      'Authorization': `token ${config.TOKEN}`
-      //'Authorization': `token ${process.env.TOKEN}`
+      //'Authorization': `token ${config.TOKEN}`
+      'Authorization': `token ${process.env.TOKEN}`
     }
   };
 
