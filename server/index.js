@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const github = require('../helpers/github.js');
 const db = require('../database/index.js');
+const port = 1128;
+// const port = process.env.PORT || 8000;
 
-let app = express();
+const app = express();
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,8 +27,6 @@ app.get('/repos', function (req, res) {
     res.send(data);
   });
 });
-
-let port = 1128;
 
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
