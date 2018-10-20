@@ -8,7 +8,13 @@ const RepoList = ({ repos }) => (
         <tr><th>Rank</th><th>Repo Name</th><th># Forks</th></tr>
       </thead>
       <tbody>
-        {repos.map((repo, rank) => (<tr key={rank}><td>{rank + 1}</td><td>{repo.name}</td><td>{repo.forks_count}</td></tr>))}
+        {repos.map((repo, rank) => (
+          <tr key={rank}>
+            <td>{rank + 1}</td>
+            <td><a href={repo.html_url}>{repo.name}</a></td>
+            <td>{repo.forks_count}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   </div>

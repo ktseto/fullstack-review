@@ -9,6 +9,7 @@ let repoSchema = mongoose.Schema({
   forks_count: Number,
   watchers_count: Number,
   stargazers_count: Number,
+  html_url: String,
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
