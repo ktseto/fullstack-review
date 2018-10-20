@@ -20,7 +20,6 @@ const getReposByUsername = (username, callback) => {
 }
 
 const getContributorsByURL_CB = (url) => {
-  console.log('eeeeeeeeeee');
   const options = {
     url: url,
     headers: {
@@ -34,7 +33,6 @@ const getContributorsByURL_CB = (url) => {
     request(options, (err, response, body) => {
       console.log('err response statuscode: ', err, response.statusCode);
       if (!err && response.statusCode == 200) {
-        console.log('boooooodddddyyyyy: ', JSON.parse(body));
         resolve(JSON.parse(body));
       } else {
         resolve('');  // got a status code 204 "no content"
