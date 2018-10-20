@@ -9,8 +9,23 @@ class App extends React.Component {
     super(props);
     this.state = { 
       repos: []
-    }
+    } 
+  }
 
+  queryThenRender() {
+    $.ajax({
+      url: '/repos',
+      method: 'GET',
+    })
+    .done((data) => {
+      this.setState({
+        repos: data,
+      });
+    });    
+  }
+
+  componentDidMount() {
+    this.queryThenRender();
   }
 
   search (term) {
@@ -20,10 +35,13 @@ class App extends React.Component {
       url: '/repos',
       method: 'POST',
       data: term,
+    })
+    .done(() => {
+      this.queryThenRender();
     });
   }
 
-  render () {
+  render() {
     return (<div>
       <h1>Github Fetcher</h1>
       <RepoList repos={this.state.repos}/>

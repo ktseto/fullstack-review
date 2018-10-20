@@ -10,25 +10,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.post('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should take the github username provided
-  // and get the repo information from the github API, then
-  // save the repo information in the database
   const term = Object.keys(req.body)[0];
   github.getReposByUsername(term, (data) => {
     db.save(data.items, (err) => {
       if (err) console.error('Error!');
       console.log('Saved!');
+      res.status(201).end();
     });
   });
-  res.status(201);
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
   db.get((data) => {
-    console.log('###########: ', data);
     res.send(data);
   });
 });

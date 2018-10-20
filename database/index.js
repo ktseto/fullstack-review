@@ -23,27 +23,10 @@ let save = (data, callback) => {
 }
 
 let get = (callback) => {
-  Repo.find().sort({ forks_count: -1,  _id: 1 }).limit(5).exec(callback);
+  Repo.find().sort({ forks_count: -1,  _id: 1 }).limit(25).exec((err, data) => {
+    callback(data);
+  });
 }
-
-//save([{ _id: 1, name: 'meep'}, { _id: 2, name: 'beep', age: 35 }]);
-
-// Repo.find((err, repo) => {
-//   if (err) return console.error(err);
-//   console.log('################');
-//   console.log(repo);
-// });
 
 module.exports.save = save;
 module.exports.get = get;
-
-
-// extra columns ignored
-// save([{ _id: 1, name: 'meep'}, { _id: 2, name: 'beep', age: 35 }]);
-
-  // data.forEach((repo) => {
-  //   (new Repo(repo)).save((err, mongoRepo) => {
-  //     if (err) console.error(err);
-  //     console.log('success');
-  //   })
-  // })
