@@ -19,7 +19,8 @@ const getReposByUsername = (username, callback) => {
   });
 }
 
-const getContributorsByURL_CB = (url, callback) => {
+const getContributorsByURL_CB = (url) => {
+  console.log('eeeeeeeeeee');
   const options = {
     url: url,
     headers: {
@@ -29,12 +30,39 @@ const getContributorsByURL_CB = (url, callback) => {
     }
   };
 
-  request(options, (err, response, body) => {
-    if (!err && response.statusCode == 200) {
-      callback(JSON.parse(body));
-    }
+  return new Promise((resolve, reject) => {
+    request(options, (err, response, body) => {
+      console.log('err response statuscode: ', err, response.statusCode);
+      if (!err && response.statusCode == 200) {
+        console.log('boooooodddddyyyyy: ', JSON.parse(body));
+        resolve(JSON.parse(body));
+      } else {
+        resolve('');  // got a status code 204 "no content"
+      }
+    });
   });
 }
 
+
+// const getContributorsByURL_CB = (url, callback) => {
+//   const options = {
+//     url: url,
+//     headers: {
+//       'User-Agent': 'request',
+//       'Authorization': `token ${config.TOKEN}`
+//       //'Authorization': `token ${process.env.TOKEN}`
+//     }
+//   };
+
+//   request(options, (err, response, body) => {
+//     if (!err && response.statusCode == 200) {
+//       callback(JSON.parse(body));
+//     }
+//   });
+// }
+
+
+
 module.exports.getReposByUsername = getReposByUsername;
-module.exports.getContributorsByURL = Promise.promisify(getContributorsByURL_CB);
+// module.exports.getContributorsByURL = Promise.promisify(getContributorsByURL_CB);
+module.exports.getContributorsByURL = getContributorsByURL_CB;

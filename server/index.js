@@ -15,27 +15,23 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/repos', function (req, res) {
   const term = Object.keys(req.body)[0];
   github.getReposByUsername(term, (repoData) => {
-    console.log('@@@@@@@@@@@@:',repoData.items);
 
-    Promise.all(repoData.items.map(x => getContributorsByURL(x.contributors_url)))
-      .then();
-
-
-    github.getContributorsByURL(repoData.items.contributors_url, (contribData) => {
-      console.log('############:', contribData);
-      db.save(repoData.items, (err, numReposUpdated, numNewRepos) => {
-        if (err) {
-          console.error('Error!');
-        } else {
-          console.log('Saved!');
-          res.status(201).send({
-            numReposUpdated: numReposUpdated,
-            numNewRepos: numNewRepos,
-          });
-        }
+    Promise.all(repoData.items.map(x => github.getContributorsByURL(x.contributors_url)))
+      .then((contributorsByRepo) => {
+        contributorsByRepo = contributorsByRepo.filter(x => x);
+        db.save(repoData.items, contributorsByRepo, (err, numReposUpdated, numNewRepos) => {
+          if (err) {
+            console.error('Error!');
+          } else {
+            console.log('Saved!');
+            res.status(201).send({
+              numReposUpdated: numReposUpdated,
+              numNewRepos: numNewRepos,
+            });
+          }
+        });
       });
-    })
-  });
+    });
 });
 
 app.get('/repos', function (req, res) {
