@@ -31,7 +31,6 @@ const getContributorsByURL_CB = (url) => {
 
   return new Promise((resolve, reject) => {
     request(options, (err, response, body) => {
-      console.log('err response statuscode: ', err, response.statusCode);
       if (!err && response.statusCode == 200) {
         resolve(JSON.parse(body));
       } else {
